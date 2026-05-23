@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: deny-unsafe-images
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: check-image-registry
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Images must come from trusted registries"
+      pattern:
+        spec:
+          containers:
+          - image: "!*:latest | registry.example.com/*"
