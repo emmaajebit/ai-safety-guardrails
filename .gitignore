@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Kyverno
+*.yaml.bak
