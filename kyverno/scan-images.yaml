@@ -1,0 +1,26 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: scan-images
+  annotations:
+    policies.kyverno.io/title: Image Vulnerability Scanning
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: require-trivy-scan
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    preconditions:
+      all:
+      - key: "{{ images.containers.*.registry }}"
+        operator: NotEquals
+        value: "docker.io"
+    validate:
+      message: "Images must be scanned for vulnerabilities using Trivy before deployment."
+      pattern:
+        metadata:
+          annotations:
+            trivy-scan: "completed"
